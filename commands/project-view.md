@@ -41,19 +41,21 @@ Keep this distinction visible in the final view (e.g. via labels, icons, or a le
 
 ## Step 3 — Design and publish the Artifact
 
-1. Load the `artifact-design` skill before writing any HTML. Load `artifact-diagramming` if an architecture or flow diagram would clarify the structure, and `dataviz` only if there's real quantitative data worth charting (e.g. test pass/fail counts, file counts) — don't force a chart where a table or text is clearer.
+1. Load the `artifact-design` skill before writing any HTML. Load `artifact-diagramming` and `dataviz` too — this view should read visually, not as a wall of text.
 2. Build **one self-contained HTML file** covering these sections, using real content gathered above (omit a section entirely if there is nothing honest to put in it — don't pad):
-   - **Architecture** — actual structure/components, grounded in the directory listing and docs you read.
+   - **Architecture** — a real structure/module diagram (via `artifact-diagramming`), grounded in the directory listing and docs you read, not a plain nested-bullet file tree.
    - **Current Goal** — what this session's user is actually trying to accomplish right now.
    - **Current State** — a factual snapshot, not a percentage.
-   - **Completed** — items with real evidence (commits, passing tests, files that exist and do what's claimed).
-   - **In Progress** — items with visible partial evidence (WIP commits, draft code, open TODOs).
+   - **Completed** — a status-board column (kanban-style card, not a bullet list) of items with real evidence (commits, passing tests, files that exist and do what's claimed).
+   - **In Progress** — a status-board column alongside Completed, for items with visible partial evidence (WIP commits, draft code, open TODOs).
    - **Validation** — what existing evidence (already run this session, or already checked into the repo) actually shows, and its real result; mark anything without such evidence `Unverified`. Do not run anything new to fill this section.
    - **Blockers / Risks** — real obstacles observed (failing tests, missing deps, unresolved decisions), not speculative worst-cases.
    - **Key Decisions** — decisions actually made in this session or documented in the repo, with why.
-   - **Next Steps** — concrete, near-term, grounded in the actual gap between current state and stated goal.
+   - **Next Steps** — a status-board column (same visual family as Completed/In Progress) of concrete, near-term items grounded in the actual gap between current state and stated goal.
    - **Recent Meaningful Changes** — drawn from `git log`/`git diff`, not guessed.
-3. Write the HTML to a path outside the observed repo (per the scope rule above), then publish it with the `Artifact` tool (default private visibility). Give it a real title and a one-line description. Do not pin it, do not ask for sharing, unless the user asks.
+   - Every card and status-board item still carries its fact/inference/plan tag from Step 2 — the visual upgrade must not blur that distinction.
+3. **Progress bars — evidence-driven only.** Draw a progress bar or ratio meter only where the repo gives you an objective denominator you can count directly, e.g. checked vs. total boxes in a task/plan file, or pass/fail counts from an existing CI or test-result artifact. Label it with what it actually counts (e.g. "6 / 9 checklist items checked in TASKS.md", "42 / 44 tests passing per last CI run"). If no such countable source exists, do not draw a bar or invent one from a vibe — say `Unverified` instead. Never render a bar for "overall project completion" — there is no honest denominator for that.
+4. Write the HTML to a path outside the observed repo (per the scope rule above), then publish it with the `Artifact` tool (default private visibility). Give it a real title and a one-line description. Do not pin it, do not ask for sharing, unless the user asks.
 
 ## Step 4 — Report
 
