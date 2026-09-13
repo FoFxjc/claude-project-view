@@ -1,0 +1,8 @@
+{
+  "name": "project-view",
+  "version": "0.1.0",
+  "description": "Renders the current Claude Code session's understanding of the current repo as a private, interactive native Artifact.",
+  "author": {
+    "name": "FoFxjc"
+  }
+}

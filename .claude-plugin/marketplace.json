@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "project-view",
+  "metadata": {
+    "description": "Marketplace for the project-view plugin: a thin /project-view command that renders the current session's understanding of a repo as a private native Artifact."
+  },
+  "owner": {
+    "name": "FoFxjc"
+  },
+  "plugins": [
+    {
+      "name": "project-view",
+      "description": "Generate a private, interactive project-view Artifact from the current session's understanding of the repo (architecture, state, validation, risks, next steps).",
+      "source": "./"
+    }
+  ]
+}

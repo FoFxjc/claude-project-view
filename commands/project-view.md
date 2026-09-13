@@ -1,0 +1,58 @@
+---
+description: Render this session's understanding of the current repo as a private native Artifact project view.
+disable-model-invocation: false
+---
+
+# project-view
+
+Produce a single-page, private, interactive **project view** of the current repository, using only what this session actually knows or can directly verify right now, and publish it as a native Artifact. Do not build a custom web app, server, renderer, or database to show it — the deliverable is one Artifact call.
+
+## Scope (hard limits)
+
+- Only the **current session** and the **current repository working tree**. No cross-session memory, no persisted history of past project views.
+- Do not save, log, or remember the resulting Artifact URL anywhere (no file, no memory, no TODO). Just report the link in chat this turn.
+- Do not modify any file belonging to the project being observed. This command is read-only with respect to the target repo.
+- Do not invent completion percentages, velocity estimates, or ETAs.
+- Never label something `Done`, `Complete`, or `Validated` without citing the concrete evidence for it (a command output, a test result, a file you read). If you cannot point to evidence, use a weaker status (`In Progress`, `Unverified`, `Claimed but not verified`).
+- Do not pre-build abstractions for other tools/platforms (e.g. Codex). This command is Claude Code-specific.
+
+## Step 1 — Gather evidence
+
+Only run checks that are relevant to this repo; skip what doesn't apply rather than padding the report.
+
+1. **Session context**: reread this conversation for what the user's actual current goal is, decisions already made in this session, and work already done in this session.
+2. **Docs**: look for `README.md`, `CLAUDE.md`, `docs/`, `ADR`/architecture docs, `CHANGELOG.md`.
+3. **Structure**: get a directory listing / tree of the repo to ground "Architecture" in real layout, not guesses.
+4. **Git state**: `git status`, `git log --oneline -20`, `git diff` (staged and unstaged) to see what's actually changed and recently changed.
+5. **Plans/tasks**: look for plan files, task lists, TODO files, issue trackers checked into the repo (e.g. `TASKS.md`, `.claude/plans/`, `PLAN.md`, slice/phase files).
+6. **Tests/validation evidence**: look for test files/directories, CI config, and — if it's cheap and safe — actually run the relevant test/build command to get a real pass/fail result. Do not fabricate a result if you don't run it; mark validation as unverified instead.
+
+## Step 2 — Classify everything into three buckets
+
+For every claim you plan to put in the view, tag it internally as one of:
+
+- **Verified fact** — you read the file, ran the command, or saw the output yourself, this session.
+- **Inference** — a reasonable conclusion from evidence, but not directly confirmed (e.g. "this file's naming suggests X pattern").
+- **Plan / stated intent** — someone said they will do this, or a doc says it's planned; it is not yet observed as implemented.
+
+Keep this distinction visible in the final view (e.g. via labels, icons, or a legend) — do not flatten it into uniform-looking bullet points.
+
+## Step 3 — Design and publish the Artifact
+
+1. Load the `artifact-design` skill before writing any HTML. Load `artifact-diagramming` if an architecture or flow diagram would clarify the structure, and `dataviz` only if there's real quantitative data worth charting (e.g. test pass/fail counts, file counts) — don't force a chart where a table or text is clearer.
+2. Build **one self-contained HTML file** covering these sections, using real content gathered above (omit a section entirely if there is nothing honest to put in it — don't pad):
+   - **Architecture** — actual structure/components, grounded in the directory listing and docs you read.
+   - **Current Goal** — what this session's user is actually trying to accomplish right now.
+   - **Current State** — a factual snapshot, not a percentage.
+   - **Completed** — items with real evidence (commits, passing tests, files that exist and do what's claimed).
+   - **In Progress** — items with visible partial evidence (WIP commits, draft code, open TODOs).
+   - **Validation** — what was actually tested/run and its real result; explicitly say what's untested.
+   - **Blockers / Risks** — real obstacles observed (failing tests, missing deps, unresolved decisions), not speculative worst-cases.
+   - **Key Decisions** — decisions actually made in this session or documented in the repo, with why.
+   - **Next Steps** — concrete, near-term, grounded in the actual gap between current state and stated goal.
+   - **Recent Meaningful Changes** — drawn from `git log`/`git diff`, not guessed.
+3. Publish it with the `Artifact` tool (default private visibility). Give it a real title and a one-line description. Do not pin it, do not ask for sharing, unless the user asks.
+
+## Step 4 — Report
+
+In chat, briefly state: the Artifact link, and one honest sentence about coverage gaps (e.g. "tests weren't run, so Validation is marked unverified"). Do not restate the whole view in chat text — the Artifact is the deliverable.
