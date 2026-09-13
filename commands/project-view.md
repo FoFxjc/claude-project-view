@@ -14,7 +14,9 @@ Produce a single-page, private, interactive **project view** of the current repo
 - Do not modify any file belonging to the project being observed. This command is read-only with respect to the target repo.
 - Do not invent completion percentages, velocity estimates, or ETAs.
 - Never label something `Done`, `Complete`, or `Validated` without citing the concrete evidence for it (a command output, a test result, a file you read). If you cannot point to evidence, use a weaker status (`In Progress`, `Unverified`, `Claimed but not verified`).
+- **Observe and visualize only — never run new tests, builds, benchmarks, or validation.** Use only evidence that already exists: what this session already ran/saw earlier in the conversation, and reports/output already checked into the repo (CI logs, test result files, coverage reports, etc.). If no such evidence exists for a claim, mark it `Unverified` rather than generating fresh evidence to fill the gap.
 - Do not pre-build abstractions for other tools/platforms (e.g. Codex). This command is Claude Code-specific.
+- Any temporary HTML file used to stage the Artifact must be written **outside the observed repo** (e.g. a scratchpad/temp directory), never inside the target project's working tree — even temporarily. The observed repo must end this command with a working tree identical to how it started.
 
 ## Step 1 — Gather evidence
 
@@ -25,7 +27,7 @@ Only run checks that are relevant to this repo; skip what doesn't apply rather t
 3. **Structure**: get a directory listing / tree of the repo to ground "Architecture" in real layout, not guesses.
 4. **Git state**: `git status`, `git log --oneline -20`, `git diff` (staged and unstaged) to see what's actually changed and recently changed.
 5. **Plans/tasks**: look for plan files, task lists, TODO files, issue trackers checked into the repo (e.g. `TASKS.md`, `.claude/plans/`, `PLAN.md`, slice/phase files).
-6. **Tests/validation evidence**: look for test files/directories, CI config, and — if it's cheap and safe — actually run the relevant test/build command to get a real pass/fail result. Do not fabricate a result if you don't run it; mark validation as unverified instead.
+6. **Tests/validation evidence**: look only for *existing* evidence — test/CI result files, coverage reports, prior command output already visible earlier in this session's transcript. Do not run tests, builds, or benchmarks yourself to produce new evidence. If no existing evidence covers a claim, mark it `Unverified`.
 
 ## Step 2 — Classify everything into three buckets
 
@@ -46,12 +48,12 @@ Keep this distinction visible in the final view (e.g. via labels, icons, or a le
    - **Current State** — a factual snapshot, not a percentage.
    - **Completed** — items with real evidence (commits, passing tests, files that exist and do what's claimed).
    - **In Progress** — items with visible partial evidence (WIP commits, draft code, open TODOs).
-   - **Validation** — what was actually tested/run and its real result; explicitly say what's untested.
+   - **Validation** — what existing evidence (already run this session, or already checked into the repo) actually shows, and its real result; mark anything without such evidence `Unverified`. Do not run anything new to fill this section.
    - **Blockers / Risks** — real obstacles observed (failing tests, missing deps, unresolved decisions), not speculative worst-cases.
    - **Key Decisions** — decisions actually made in this session or documented in the repo, with why.
    - **Next Steps** — concrete, near-term, grounded in the actual gap between current state and stated goal.
    - **Recent Meaningful Changes** — drawn from `git log`/`git diff`, not guessed.
-3. Publish it with the `Artifact` tool (default private visibility). Give it a real title and a one-line description. Do not pin it, do not ask for sharing, unless the user asks.
+3. Write the HTML to a path outside the observed repo (per the scope rule above), then publish it with the `Artifact` tool (default private visibility). Give it a real title and a one-line description. Do not pin it, do not ask for sharing, unless the user asks.
 
 ## Step 4 — Report
 
