@@ -1,7 +1,7 @@
 {
   "name": "project-view",
-  "version": "0.1.0",
-  "description": "Renders the current Claude Code session's understanding of the current repo as a private, interactive native Artifact.",
+  "version": "0.2.0",
+  "description": "Two zoom levels as private native Artifacts: /project-view (concise project overview) and /session-view (detailed current-session engineering dashboard).",
   "author": {
     "name": "FoFxjc"
   }
